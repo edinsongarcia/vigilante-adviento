@@ -5,7 +5,7 @@ si hay un producto con la palabra clave y con stock. Sin dependencias externas.
 import json, os, sys, unicodedata, urllib.parse, urllib.request
 
 BASE = "https://www.maquillajetrendyshop.com"
-KEYWORD = os.environ.get("KEYWORD", "adviento").lower()
+KEYWORD = os.environ.get("KEYWORD", "Encrespador Oro").lower()
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
 CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
