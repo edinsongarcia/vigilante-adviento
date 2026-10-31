@@ -1,0 +1,37 @@
+name: Vigilante calendario
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Enviar solo un mensaje de prueba a Telegram"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Revisar tienda
+        id: run
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TEST: ${{ inputs.test }}
+        run: |
+          if [ "$TEST" = "true" ]; then python3 check.py --test; else python3 check.py; fi
+
+      - name: Desactivarse tras avisar (evita mensajes repetidos)
+        if: steps.run.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow disable vigilante.yml --repo "$GITHUB_REPOSITORY"
